@@ -5,13 +5,13 @@
  * own work. I/we have neither given nor received unauthorized assistance on
  * this assignment.
  *
- * Name 1:
- * Email address 1:
- * UTEID 1:
+ * Name 1: Lauren Murillo
+ * Email address 1: lnm2448@eid.utexas.edu
+ * UTEID 1: lnm2448
  *
- * Name 2:
- * Email address 2:
- * UTEID 2:
+ * Name 2: Khanh-Hoa Nguyen
+ * Email address 2: kpn397@eid.utexas.edu
+ * UTEID 2: kpn397
  */
 
 /**
@@ -24,9 +24,9 @@ public class RecursiveTester {
 
     // run the tests
     public static void main(String[] args) {
-        doNextIsDoubleTests();
-        //doCarpetTest();
-        //doFairTeamsTests();
+        // doNextIsDoubleTests();
+        doCarpetTest();
+        // doFairTeamsTests();
     }
 
     private static void doNextIsDoubleTests() {
@@ -84,21 +84,22 @@ public class RecursiveTester {
 
     // Test the Sierpinski carpet method.
     private static void doCarpetTest() {
-        // Recursive.drawCarpet(729, 4);
+        Recursive.drawCarpet(729, 4);
         // Recursive.drawCarpet(729, 1);
     }
 
     private static void doFairTeamsTests() {
-//         System.out.println("Stress test for minDifference - may take up to a minute");
-//         int[] testerArr = new int[] {5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60,
-//         65, 70, 75, 100000};
-//         Stopwatch s = new Stopwatch();
-//         s.start();
-//         int actualInt = Recursive.minDifference(4, testerArr);
-//         s.stop();
-//         System.out.println("Time to solve for 16 people on 4 teams: " + s.time() +
-//         "\n");
-//         System.out.println(actualInt);
+        // System.out.println("Stress test for minDifference - may take up to a
+        // minute");
+        // int[] testerArr = new int[] {5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60,
+        // 65, 70, 75, 100000};
+        // Stopwatch s = new Stopwatch();
+        // s.start();
+        // int actualInt = Recursive.minDifference(4, testerArr);
+        // s.stop();
+        // System.out.println("Time to solve for 16 people on 4 teams: " + s.time() +
+        // "\n");
+        // System.out.println(actualInt);
 
         int[] abilities = { 1, 2, 3, 4, 5, 6, 7 };
         showFairTeamsResults(Recursive.minDifference(3, abilities), 1, 1);
