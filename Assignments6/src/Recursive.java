@@ -119,6 +119,58 @@ public class Recursive {
      *         return value will be greater than or equal to 0.
      */
     public static int minDifference(int numTeams, int[] abilities) {
-        return -1;
+        // int lowestSum = 0;
+    	// int greatestSum = 0;
+        // int otherSum = 0;
+    	// for (int i = 0; i < abilities.length; i++) {
+    	// 	if (abilities[i] > greatestSum) {
+        //         lowestSum = abilities[i];
+        //     }
+        //     if (abilities[i] < lowestSum) { 
+        //         greatestSum = abilities[i];
+        //     }
+    	// }
+        // return -1;
+        
+        // sums of each team
+        int[] sums = new int[numTeams];
+
+        // number of people in each team
+        int[] numPeople = new int[numTeams];
+        return helper(numPeople, abilities, sums, 0);
+    }
+    private static int helper(int[] numPeople, int[] abilities, int[] sums, int personIndex) {
+        if (personIndex == abilities.length) {
+            // base case
+            for (int count : numPeople) {
+                // invalid
+                if (count == 0) {
+                    return Integer.MAX_VALUE;
+                }
+            }
+            // valid
+            int maxScore = Integer.MIN_VALUE;
+            int minScore = Integer.MAX_VALUE;
+            for (int sum : sums) {
+                maxScore = Math.max(maxScore, sum);
+                minScore = Math.min(minScore, sum);
+            }
+            return maxScore - minScore;
+        }
+        int minDiff = Integer.MAX_VALUE;
+        
+        for (int i = 0; i < sums.length; i++) {
+            // CREATE A NEW POSSIBLE TEAM
+            // for each team slot, add the ability # of the personIndex to the current sum
+            sums[i] += abilities[personIndex];
+            // for this team, add to number of people
+            numPeople[i]++;
+            // for this team, continue to add the NEXT ability to the current sum
+            minDiff = Math.min(minDiff, helper(numPeople, abilities, sums, personIndex + 1));
+            // backtracking
+            sums[i] -= abilities[personIndex];
+            numPeople[i]--;
+        }
+        return minDiff;
     }
 }
