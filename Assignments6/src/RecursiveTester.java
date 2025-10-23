@@ -24,9 +24,9 @@ public class RecursiveTester {
 
     // run the tests
     public static void main(String[] args) {
-        // doNextIsDoubleTests();
+        doNextIsDoubleTests();
         // doCarpetTest();
-        doFairTeamsTests();
+        //doFairTeamsTests();
     }
 
     private static void doNextIsDoubleTests() {
