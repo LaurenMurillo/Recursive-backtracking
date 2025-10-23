@@ -16,8 +16,10 @@
 
 import java.util.List;
 import java.util.Set;
+import java.util.HashMap;
 
 public class AnagramSolver {
+    private HashMap<String, LetterInventory> wordInventory;
 
     /*
      * pre: list != null
@@ -25,7 +27,14 @@ public class AnagramSolver {
      * @param list Contains the words to form anagrams from.
      */
     public AnagramSolver(Set<String> dictionary) {
-        // CS 314 Students: add your code here
+        // preconditions
+        if (dictionary == null) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "AnagramSolver. dictionary parameter can not be null.");
+        }
+        for (String element : dictionary) {
+            wordInventory.put(element, new LetterInventory(element));
+        }
     }
 
     /*
