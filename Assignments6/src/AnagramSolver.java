@@ -45,6 +45,10 @@ public class AnagramSolver {
      */
     public List<List<String>> getAnagrams(String s, int maxWords) {
         // CS 314 Students: add your code here.
+        String regex = ".*[a-zA-Z].*";
+        if (s == null || !s.matches(regex) || maxWords < 0) {
+            throw new IllegalArgumentException();
+        }
         return null; // Change this return statement as necessary
     }
 

@@ -3,27 +3,31 @@ public class LetterInventory {
     //can do a map(String letter, int frequency)
     private final int alphabetSize;
     private int[] alphaFreq;//frequency of each letter of the alphabet
-    private int total;
-    private String og;
+    private int total;//total letters in inventory
+
+    public LetterInventory() {
+        alphabetSize = 26;
+        alphaFreq = new int[alphabetSize];
+        total = 0;
+    }
 
     public LetterInventory(String s){
         //pre condition
         if (s == null) {
             throw new IllegalArgumentException();
         }
-        total = 0;
-        og = s;
+        //instantiating variables:
         alphabetSize = 26;
         alphaFreq = new int[alphabetSize];
-        char currLetter = 'a';
-        for (int j = 0; j < alphaFreq.length; j++) {
-            for (int i = 0; i < s.length(); i++) {
-                if ((s.substring(i,i+1).toLowerCase()).equals(String.valueOf(currLetter))) {
-                    alphaFreq[j]++;
-                    total++;
-                }
+        total = 0;
+        //setting frequencies in array:
+        char firstLetter = 'a';
+        for (int i = 0; i < s.length(); i++) {
+            char currL = s.charAt(i);
+            if (Character.isLetter(currL)) {
+                alphaFreq[Character.toLowerCase(currL) - firstLetter]++;
+                total++;
             }
-            currLetter += 1;
         }
     }
 
@@ -35,8 +39,7 @@ public class LetterInventory {
             throw new IllegalArgumentException();
         }
         //know we know the following math would generate a valid index
-        String lowerCase = String.valueOf(letter).toLowerCase();
-        int index =  lowerCase.charAt(0) - 'a';
+        int index =  Character.toLowerCase(letter) - 'a';
         return alphaFreq[index];
     }
 
@@ -50,22 +53,28 @@ public class LetterInventory {
 
     //char to a string so we can add it to our string of all letters
     public String toString() {
-        String letters = "";
+        StringBuilder letters = new StringBuilder();
         char currLetter = 'a';
         for (int i=0; i<alphaFreq.length; i++) {
             for (int j=0; j<alphaFreq[i]; j++){
-                letters += String.valueOf(currLetter);
+                letters.append(String.valueOf(currLetter));
             }
             currLetter += 1;
         }
-        return letters;
+        return letters.toString();
     }
 
     public LetterInventory add(LetterInventory l) {
         if (l == null) {
             throw new IllegalArgumentException();
         }
-        LetterInventory combined = new LetterInventory(l.og+og);
+        LetterInventory combined = new LetterInventory();
+        int[] tempFreqList = new int[alphabetSize];
+        for (int i = 0; i < alphabetSize; i++) {
+            tempFreqList[i] = alphaFreq[i] + l.alphaFreq[i];
+        }
+        combined.alphaFreq = tempFreqList;
+        combined.total = this.total + l.total;
         return combined;
     }
 
@@ -74,30 +83,33 @@ public class LetterInventory {
             throw new IllegalArgumentException();
         }
         int[] tempFreqList = new int[alphabetSize];
-        char currLetter = 'a';
         for (int i = 0; i < alphabetSize; i++) {
-            tempFreqList[i] = alphaFreq[i] - l.get(currLetter);
+            tempFreqList[i] = alphaFreq[i] - l.alphaFreq[i];
             if (tempFreqList[i] < 0) {
                 return null;
             }
-            currLetter += 1;
         }
-        String letters = "";
-        currLetter = 'a';
-        for (int i=0; i<tempFreqList.length; i++) {
-            for (int j=0; j<tempFreqList[i]; j++) {
-                letters += String.valueOf(currLetter);
-            }
-            currLetter += 1;
-        }
-        LetterInventory subtracted = new LetterInventory(letters);
+        LetterInventory subtracted = new LetterInventory();
+        subtracted.alphaFreq = tempFreqList;
+        //subtracted.og = subtracted.toString();
+        subtracted.total = total - l.total;
         return subtracted;
     }
 
     public boolean equals(Object obj) {
         //pre condition
         if (obj instanceof LetterInventory) {
-            return toString().equals(obj.toString());
+            LetterInventory other = (LetterInventory) obj;
+            if (total != other.total) {
+                return false;
+            }
+
+            for (int i = 0; i < alphabetSize; i++) {
+                if (alphaFreq[i] != other.alphaFreq[i]) {
+                    return false;
+                }
+            }
+            return true;
         }
         return false;
     }
