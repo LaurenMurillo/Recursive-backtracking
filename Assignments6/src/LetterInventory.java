@@ -1,116 +1,220 @@
+/*
+ * LetterInventory.java - CS 314 Assignment 6
+ *
+ * By signing my/our name(s) below, I/we affirm that this assignment is my/our
+ * own work. I/we have neither given nor received unauthorized assistance on
+ * this assignment.
+ *
+ * Name 1: Lauren Murillo
+ * Email address 1: lnm2448@eid.utexas.edu
+ * UTEID 1: lnm2448
+ *
+ * Name 2: Khanh-Hoa Nguyen
+ * Email address 2: kpn397@eid.utexas.edu
+ * UTEID 2: kpn397
+ */
+
+/**
+ * Represents the frequency of letters for a given word or phrase.
+ * Stores the number of times each English letter, 'a' through 'z', occurs in
+ * the word or phrase.
+ */
 public class LetterInventory {
-    //frequency of letters in a given word or phrase
-    //can do a map(String letter, int frequency)
-    private final int alphabetSize;
-    private int[] alphaFreq;//frequency of each letter of the alphabet
-    private int total;//total letters in inventory
+    private final int ALPHABET_SIZE;
+    private int[] letterFreq;
+    private int numLetters;
 
+    /**
+     * Creates a new LetterInventory object and instantiates ALPHABET_SIZE and
+     * letter frequency list size.
+     */
     public LetterInventory() {
-        alphabetSize = 26;
-        alphaFreq = new int[alphabetSize];
-        total = 0;
+        ALPHABET_SIZE = 26;
+        letterFreq = new int[ALPHABET_SIZE];
     }
 
-    public LetterInventory(String s){
-        //pre condition
-        if (s == null) {
-            throw new IllegalArgumentException();
+    /**
+     * Creates a new LetterInventory object and stores valid letter frequencies in
+     * a list.
+     * 
+     * @param phrase pre: != null, phrase to determine letter frequencies
+     */
+    public LetterInventory(String phrase) {
+        this();
+        // checks preconditions
+        if (phrase == null) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "LetterInventory. phrase parameter can not be null.");
         }
-        //instantiating variables:
-        alphabetSize = 26;
-        alphaFreq = new int[alphabetSize];
-        total = 0;
-        //setting frequencies in array:
-        char firstLetter = 'a';
-        for (int i = 0; i < s.length(); i++) {
-            char currL = s.charAt(i);
-            if (Character.isLetter(currL)) {
-                alphaFreq[Character.toLowerCase(currL) - firstLetter]++;
-                total++;
+        for (char letter : phrase.toCharArray()) {
+            char currLetter = Character.toLowerCase(letter);
+            if ('a' <= currLetter && currLetter <= 'z') {
+                letterFreq[currLetter - 'a']++;
+                numLetters++;
             }
         }
+        // for (int i = 0; i < phrase.length(); i++) {
+        // char currL = phrase.charAt(i);
+        // if (Character.isLetter(currL)) {
+        // letterFreq[Character.toLowerCase(currL) - 'a']++;
+        // total++;
+        // }
+        // }
     }
 
-    //returns frequncy of a particular letter
+    /**
+     * Returns the frequency of a given letter in this LetterInventory.
+     * 
+     * @param letter pre: char must be an English letter, the letter to get the
+     *               frequency of.
+     * @return frequency of a given letter.
+     */
     public int get(char letter) {
-        //precondition, letter must be an english letter
-        //if (!('a' <= letter && letter <= 'z') || !('A' <= letter && letter <= 'Z')) {
-        if (!Character.isLetter(letter)) {//not sure if this argument is allowed (Character class)
-            throw new IllegalArgumentException();
+        // is this bad?
+        // letter = Character.toLowerCase(letter);
+        char lower = Character.toLowerCase(letter);
+        // check preconditions
+        if ('a' > lower || lower > 'z') {// not sure if this argument is allowed (Character class)
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "get. letter parameter must be an English letter.");
         }
-        //know we know the following math would generate a valid index
-        int index =  Character.toLowerCase(letter) - 'a';
-        return alphaFreq[index];
+        return letterFreq[lower - 'a'];
     }
 
+    /**
+     * Returns the total number of letters in this LetterInventory.
+     * 
+     * @return total number of letters.
+     */
     public int size() {
-        return total;
+        return numLetters;
     }
 
+    /**
+     * Returns true if the size of this LetterInventory is 0, false otherwise.
+     * 
+     * @return true if the size of this LetterInventory is 0.
+     */
     public boolean isEmpty() {
-        return total == 0;
+        return numLetters == 0;
     }
 
-    //char to a string so we can add it to our string of all letters
+    /**
+     * Returns a String representation of this LetterInventory.
+     * All letters are listed in alphabetical order.
+     * 
+     * @return a String representation of this LetterInventory.
+     */
     public String toString() {
-        StringBuilder letters = new StringBuilder();
-        char currLetter = 'a';
-        for (int i=0; i<alphaFreq.length; i++) {
-            for (int j=0; j<alphaFreq[i]; j++){
-                letters.append(String.valueOf(currLetter));
+        StringBuilder letters = new StringBuilder(numLetters);
+        for (int index = 0; index < letterFreq.length; index++) {
+            if (letterFreq[index] > 0) {
+                char letter = (char) ('a' + index);
+                for (int j = 0; j < letterFreq[index]; j++) {
+                    letters.append(letter);
+                }
             }
-            currLetter += 1;
         }
         return letters.toString();
     }
 
-    public LetterInventory add(LetterInventory l) {
-        if (l == null) {
-            throw new IllegalArgumentException();
+    /**
+     * Add the frequencies from the calling LetterInventory object to the
+     * frequencies of the letters in the explicit parameter.
+     * 
+     * @param other pre: != null, LetterInventory object to add frequencies with.
+     *              post: neither calling object or explicit parameter are altered.
+     * @return a LetterInventory created by adding the frequencies.
+     */
+    public LetterInventory add(LetterInventory other) {
+        // check preconditions
+        if (other == null) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "add. other parameter can not be null.");
         }
-        LetterInventory combined = new LetterInventory();
-        int[] tempFreqList = new int[alphabetSize];
-        for (int i = 0; i < alphabetSize; i++) {
-            tempFreqList[i] = alphaFreq[i] + l.alphaFreq[i];
+        LetterInventory sum = new LetterInventory();
+        for (int index = 0; index < ALPHABET_SIZE; index++) {
+            sum.letterFreq[index] = letterFreq[index] + other.letterFreq[index];
         }
-        combined.alphaFreq = tempFreqList;
-        combined.total = this.total + l.total;
-        return combined;
+        sum.numLetters = numLetters + other.numLetters;
+        return sum;
     }
 
-    public LetterInventory subtract(LetterInventory l) {
-        if (l == null) {
-            throw new IllegalArgumentException();
+    /**
+     * Subtract the letter frequencies of the explicit parameter from the calling
+     * LetterInventory's letter frequencies.
+     * 
+     * @param other pre: != null, the LetterInventory object which frequencies
+     *              are being subtracted from calling LetterInventory object's
+     *              letter frequencies.
+     *              post: neither calling object or explicit parameter are altered.
+     * @return a LetterInventory created by subtracting the frequencies.
+     */
+    public LetterInventory subtract(LetterInventory other) {
+        // check preconditions
+        if (other == null) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "subtract. other parameter can not be null.");
         }
-        int[] tempFreqList = new int[alphabetSize];
-        for (int i = 0; i < alphabetSize; i++) {
-            tempFreqList[i] = alphaFreq[i] - l.alphaFreq[i];
-            if (tempFreqList[i] < 0) {
+        LetterInventory difference = new LetterInventory();
+        for (int i = 0; i < ALPHABET_SIZE; i++) {
+            if (letterFreq[i] - other.letterFreq[i] < 0) {
                 return null;
             }
+            difference.letterFreq[i] = letterFreq[i] - other.letterFreq[i];
         }
-        LetterInventory subtracted = new LetterInventory();
-        subtracted.alphaFreq = tempFreqList;
-        //subtracted.og = subtracted.toString();
-        subtracted.total = total - l.total;
-        return subtracted;
+        difference.numLetters = numLetters - other.numLetters;
+        return difference;
     }
 
-    public boolean equals(Object obj) {
-        //pre condition
-        if (obj instanceof LetterInventory) {
-            LetterInventory other = (LetterInventory) obj;
-            if (total != other.total) {
-                return false;
-            }
-
-            for (int i = 0; i < alphabetSize; i++) {
-                if (alphaFreq[i] != other.alphaFreq[i]) {
-                    return false;
-                }
-            }
+    /**
+     * Determines if two LetterInventorys are equal to each other.
+     * Two LetterInventorys are equal if the frequency for each letter in the
+     * alphabet is the same.
+     * 
+     * @param other The other object to compare this LetterInventory to.
+     * @return true if the two LetterInventorys are equal to each other, false
+     *         otherwise.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
             return true;
         }
-        return false;
+        if (!(other instanceof LetterInventory)) {
+            return false;
+        }
+        LetterInventory otherInven = (LetterInventory) other;
+        if (numLetters != otherInven.numLetters) {
+            return false;
+        }
+        for (int i = 0; i < ALPHABET_SIZE; i++) {
+            if (letterFreq[i] != otherInven.letterFreq[i]) {
+                return false;
+            }
+        }
+        return true;
+
+        // boolean same = numLetters == otherInven.numLetters;
+        // int i = 0;
+        // while (same && i < ALPHABET_SIZE) {
+        // same = letterFreq[i] == otherInven.letterFreq[i];
+        // i++;
+        // }
+        // return same;
+
+        // if (other instanceof LetterInventory) {
+        // LetterInventory otherInven = (LetterInventory) other;
+        // if (numLetters != otherInven.numLetters) {
+        // return false;
+        // }
+        // for (int i = 0; i < ALPHABET_SIZE; i++) {
+        // if (letterFreq[i] != otherInven.letterFreq[i]) {
+        // return false;
+        // }
+        // }
+        // return true;
+        // }
+        // return false;
     }
 }

@@ -24,9 +24,9 @@ public class RecursiveTester {
 
     // run the tests
     public static void main(String[] args) {
-        doNextIsDoubleTests();
+        // doNextIsDoubleTests();
         // doCarpetTest();
-        //doFairTeamsTests();
+        // doFairTeamsTests();
     }
 
     private static void doNextIsDoubleTests() {
@@ -89,7 +89,8 @@ public class RecursiveTester {
     }
 
     private static void doFairTeamsTests() {
-        // System.out.println("Stress test for minDifference - may take up to a minute");
+        // System.out.println("Stress test for minDifference - may take up to a
+        // minute");
         // int[] testerArr = new int[] {5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60,
         // 65, 70, 75, 100000};
         // Stopwatch s = new Stopwatch();

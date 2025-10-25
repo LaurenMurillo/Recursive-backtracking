@@ -16,7 +16,6 @@
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Arrays;
 
 /**
  * Various recursive methods to be implemented.
@@ -35,23 +34,31 @@ public class Recursive {
      *         a value that is double the element.
      */
     public static int nextIsDouble(int[] data) {
+        // check preconditions
         if (data == null) {
             throw new IllegalArgumentException("Failed precondition: "
                     + "revString. parameter may not be null.");
         }
-        return doubleHelper(data); // Change as necessary
+        return countDoubles(data, 0, 0);
     }
 
-    private static int doubleHelper(int[] array) {
-        // base case
-        if (array.length == 1) {
-            return 0;
-        } else if ((array[0] * 2) == array[1]) {
-            // move to next element
-            return 1 + doubleHelper(Arrays.copyOfRange(array, 1, array.length));
-        } else {
-            return 0 + doubleHelper(Arrays.copyOfRange(array, 1, array.length));
+    /**
+     * Helper method for nextIsDouble
+     * Count the number of elements in array that are followed directly by value
+     * that is double that element.
+     * 
+     * @param array The array to search
+     * @return the number of elements that are followed directly by double that
+     *         element.
+     */
+    private static int countDoubles(int[] array, int index, int count) {
+        if (index == array.length - 1) {
+            return count;
         }
+        if ((array[index] * 2) == array[index + 1]) {
+            count++;
+        }
+        return countDoubles(array, index + 1, count);
     }
 
     /**
@@ -85,15 +92,14 @@ public class Recursive {
      */
     private static void drawSquares(Graphics g, int size, int limit,
             double x, double y) {
-        int newSize = size / 3;
+        final int DIVIDE_GRID = 3;
+        int newSize = size / DIVIDE_GRID;
         int newX = (int) x + newSize;
         int newY = (int) y + newSize;
         g.fillRect(newX, newY, newSize, newSize);
-        // base case
         if (newSize >= limit) {
-            // moving position
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
+            for (int i = 0; i < DIVIDE_GRID; i++) {
+                for (int j = 0; j < DIVIDE_GRID; j++) {
                     int moveX = j * newSize + (int) x;
                     int moveY = i * newSize + (int) y;
                     drawSquares(g, newSize, limit, moveX, moveY);
@@ -115,40 +121,44 @@ public class Recursive {
      * @param abilities the ability scores of the people to distribute
      * @return return the minimum possible difference between the team with the
      *         maximum total ability and the team with the minimum total ability.
-     *         The
-     *         return value will be greater than or equal to 0.
+     *         The return value will be greater than or equal to 0.
      */
     public static int minDifference(int numTeams, int[] abilities) {
-        // int lowestSum = 0;
-    	// int greatestSum = 0;
-        // int otherSum = 0;
-    	// for (int i = 0; i < abilities.length; i++) {
-    	// 	if (abilities[i] > greatestSum) {
-        //         lowestSum = abilities[i];
-        //     }
-        //     if (abilities[i] < lowestSum) { 
-        //         greatestSum = abilities[i];
-        //     }
-    	// }
-        // return -1;
-        
-        // sums of each team
+        // check preconditions
+        if (numTeams < 2) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "minDifference. numTeams parameter must be at least 2.");
+        } else if (abilities == null) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "minDifference. abilities parameter can not be null.");
+        } else if (abilities.length < numTeams) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "minDifference. abilities length must be at least number of teams to form.");
+        }
         int[] sums = new int[numTeams];
-
-        // number of people in each team
         int[] numPeople = new int[numTeams];
-        return helper(numPeople, abilities, sums, 0);
+        return getMinDiff(numPeople, abilities, sums, 0);
     }
-    private static int helper(int[] numPeople, int[] abilities, int[] sums, int personIndex) {
+
+    /**
+     * Helper method for minDifference
+     * Creates all valid sets of teams and gets the minimum difference
+     * possible between teams based on ability scores.
+     * 
+     * @param numPeople   list of number of people in each team
+     * @param abilities   the ability scores of the people to distribute
+     * @param sums        list of every team's total abilities
+     * @param personIndex current person in abilities list
+     * @return the minimum possible difference between the team with the
+     *         maximum total ability and the team with the minimum total ability.
+     */
+    private static int getMinDiff(int[] numPeople, int[] abilities, int[] sums, int personIndex) {
         if (personIndex == abilities.length) {
-            // base case
             for (int count : numPeople) {
-                // invalid
                 if (count == 0) {
                     return Integer.MAX_VALUE;
                 }
             }
-            // valid
             int maxScore = Integer.MIN_VALUE;
             int minScore = Integer.MAX_VALUE;
             for (int sum : sums) {
@@ -158,16 +168,10 @@ public class Recursive {
             return maxScore - minScore;
         }
         int minDiff = Integer.MAX_VALUE;
-        
         for (int i = 0; i < sums.length; i++) {
-            // CREATE A NEW POSSIBLE TEAM
-            // for each team slot, add the ability # of the personIndex to the current sum
             sums[i] += abilities[personIndex];
-            // for this team, add to number of people
             numPeople[i]++;
-            // for this team, continue to add the NEXT ability to the current sum
-            minDiff = Math.min(minDiff, helper(numPeople, abilities, sums, personIndex + 1));
-            // backtracking
+            minDiff = Math.min(minDiff, getMinDiff(numPeople, abilities, sums, personIndex + 1));
             sums[i] -= abilities[personIndex];
             numPeople[i]--;
         }

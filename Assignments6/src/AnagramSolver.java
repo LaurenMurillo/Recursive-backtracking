@@ -5,13 +5,13 @@
  * own work. I/we have neither given nor received unauthorized assistance on
  * this assignment.
  *
- * Name 1:
- * Email address 1:
- * UTEID 1:
+ * Name 1: Lauren Murillo
+ * Email address 1: lnm2448@eid.utexas.edu
+ * UTEID 1: lnm2448
  *
- * Name 2:
- * Email address 2:
- * UTEID 2:
+ * Name 2: Khanh-Hoa Nguyen
+ * Email address 2: kpn397@eid.utexas.edu
+ * UTEID 2: kpn397
  */
 
 import java.util.List;
@@ -22,23 +22,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+/**
+ * Provides methods to find all possiblle anagrams for a given phrase.
+ */
 public class AnagramSolver {
-    private TreeMap<String, LetterInventory> dictInven;
+    private TreeMap<String, LetterInventory> dictLetters;
 
-    /*
-     * pre: list != null
-     *
-     * @param list Contains the words to form anagramsList from.
+    /**
+     * Creates a new AnagramSolver object and stores the original words in the
+     * dictionary and their corresponding letter inventories.
+     * 
+     * @param dictionary pre: list != null, list Contains the words to form
+     *                   anagramsList from.
      */
     public AnagramSolver(Set<String> dictionary) {
-        // preconditions
+        // check preconditions
         if (dictionary == null) {
             throw new IllegalArgumentException("Violation of precondition: "
                     + "AnagramSolver. dictionary parameter can not be null.");
         }
-        dictInven = new TreeMap<>();
-        for (String element : dictionary) {
-            dictInven.put(element, new LetterInventory(element));
+        dictLetters = new TreeMap<>();
+        for (String word : dictionary) {
+            dictLetters.put(word, new LetterInventory(word));
         }
     }
 
@@ -49,43 +54,57 @@ public class AnagramSolver {
      * pre: maxWords >= 0, s != null, s contains at least one English letter.
      */
     public List<List<String>> getAnagrams(String s, int maxWords) {
-        // preconditions
+        // check preconditions
+        if (s == null) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "getAnagrams. string parameter can not be null.");
+        } else if (!s.matches(".*[a-zA-Z]+.*")) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "getAnagrams. string parameter must contain at least one English letter.");
+        } else if (maxWords < 0) {
+            throw new IllegalArgumentException("Violation of precondition: "
+                    + "getAnagrams. maxWords parameter must be greater than or equal to 0.");
+        }
+        // boolean hasEnglishLetter = false;
+        // for (char letter : s.toCharArray()) {
+        // char lower = Character.toLowerCase(letter);
+        // if ('a' <= lower && lower <= 'z') {
+        // hasEnglishLetter = true;
+        // }
+        // }
+        // if (!hasEnglishLetter) {
+        // throw new IllegalArgumentException("Violation of precondition: "
+        // + "getAnagrams. string parameter must contain at least one English letter.");
+        // }
 
         // preprocessing: filter words
-        LetterInventory word = new LetterInventory(s);
+        LetterInventory letters = new LetterInventory(s);
         ArrayList<String> eligible = new ArrayList<>();
-        for (Map.Entry<String, LetterInventory> inventory : dictInven.entrySet()) {
-            // LetterInventory subtracted = word.subtract(inventory.getValue());
-            if (word.subtract(inventory.getValue()) != null) {
+        for (Map.Entry<String, LetterInventory> inventory : dictLetters.entrySet()) {
+            if (letters.subtract(inventory.getValue()) != null) {
                 eligible.add(inventory.getKey());
             }
         }
-        // System.out.println(eligible);
 
-        List<List<String>> anagramsList = new ArrayList<>();
-        findAnagram(word, eligible, new ArrayList<>(), anagramsList, maxWords, 0);
-        // sort anagramsList based on assignment's sorting method
-        Collections.sort(anagramsList, new AnagramComparator());
-        return anagramsList; // Change this return statement as necessary
+        List<List<String>> anagrams = new ArrayList<>();
+        findAnagrams(letters, maxWords, 0, eligible, new ArrayList<>(), anagrams);
+        Collections.sort(anagrams, new AnagramComparator());
+        return anagrams;
     }
 
-    private void findAnagram(LetterInventory lettersLeft, List<String> eligible, List<String> chosen,
-            List<List<String>> anagramsList, int maxWords, int wordIndex) {
-        // base case: all letters used
+    private void findAnagrams(LetterInventory lettersLeft, int maxWords, int wordIndex,
+            List<String> eligible, List<String> words, List<List<String>> anagrams) {
         if (lettersLeft.isEmpty()) {
-            // pop pop pop
-            List<String> anagram = new ArrayList<>(chosen);
-            // sort words in lexicographical
-            Collections.sort(anagram);
-            anagramsList.add(anagram);
-        } else if (maxWords == 0 || chosen.size() < maxWords) {
+            List<String> anagram = new ArrayList<>(words);
+            Collections.sort(new ArrayList<>(words));
+            anagrams.add(anagram);
+        } else if (maxWords == 0 || words.size() < maxWords) {
             for (int i = wordIndex; i < eligible.size(); i++) {
-                LetterInventory subtracted = lettersLeft.subtract(dictInven.get(eligible.get(i)));
-                if (subtracted != null) {
-                    chosen.add(eligible.get(i));
-                    // backtracking
-                    findAnagram(subtracted, eligible, chosen, anagramsList, maxWords, i);
-                    chosen.remove(chosen.size() - 1);
+                LetterInventory letters = lettersLeft.subtract(dictLetters.get(eligible.get(i)));
+                if (letters != null) {
+                    words.add(eligible.get(i));
+                    findAnagrams(letters, maxWords, i, eligible, words, anagrams);
+                    words.remove(words.size() - 1);
                 }
             }
         }
@@ -100,7 +119,7 @@ public class AnagramSolver {
             }
             // sort by string
             for (int i = 0; i < anagram1.size(); i++) {
-                if (anagram1.get(i).compareTo(anagram2.get(i)) != 0) {
+                if (!anagram1.get(i).equals(anagram2.get(i))) {
                     return anagram1.get(i).compareTo(anagram2.get(i));
                 }
             }

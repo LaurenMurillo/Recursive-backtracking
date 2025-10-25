@@ -5,13 +5,13 @@
  * own work. I/we have neither given nor received unauthorized assistance on
  * this assignment.
  *
- * Name 1:
- * Email address 1:
- * UTEID 1:
+ * Name 1: Lauren Murillo
+ * Email address 1: lnm2448@eid.utexas.edu
+ * UTEID 1: lnm2448
  *
- * Name 2:
- * Email address 2:
- * UTEID 2:
+ * Name 2: Khanh-Hoa Nguyen
+ * Email address 2: kpn397@eid.utexas.edu
+ * UTEID 2: kpn397
  */
 
 import java.io.File;
