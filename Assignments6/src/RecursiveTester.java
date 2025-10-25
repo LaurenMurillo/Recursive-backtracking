@@ -23,32 +23,30 @@
 public class RecursiveTester {
     // run the tests
     public static void main(String[] args) {
-        //test cases for nextIsDouble()
-        int[] numsForDouble = { 22, 44, 0, 2, 11, 22};
+        // test cases for nextIsDouble()
+        int[] numsForDouble = { 22, 44, 0, 2, 11, 22 };
         int actualDouble = Recursive.nextIsDouble(numsForDouble);
         int expectedDouble = 2;
         if (actualDouble == expectedDouble) {
             System.out.println("Test 1 passed. next is double.");
-        } 
-        else {
+        } else {
             System.out.println("Test 1 failed. next is double. expected: "
                     + expectedDouble + ", actual: " + actualDouble);
         }
 
-        int[] numsForDoubleTwo = {0, 0, 1, 2, 4, 20, 41};
+        int[] numsForDoubleTwo = { 0, 0, 1, 2, 4, 20, 41 };
         actualDouble = Recursive.nextIsDouble(numsForDoubleTwo);
         expectedDouble = 3;
         if (actualDouble == expectedDouble) {
             System.out.println("Test 2 passed. next is double.");
-        } 
-        else {
+        } else {
             System.out.println("Test 2 failed. next is double. expected: "
                     + expectedDouble + ", actual: " + actualDouble);
         }
-        //test cases for minDifference()
-        int[] abilities = { 4, 7, 8, 1, 10, 12};
+        // test cases for minDifference()
+        int[] abilities = { 4, 7, 8, 1, 10, 12 };
         showFairTeamsResults(Recursive.minDifference(3, abilities), 2, 3);
-        int[] abilitiesTwo = { 1, 20, 11, 7, 6, 3, 44};
+        int[] abilitiesTwo = { 1, 20, 11, 7, 6, 3, 44 };
         showFairTeamsResults(Recursive.minDifference(3, abilitiesTwo), 20, 4);
     }
 

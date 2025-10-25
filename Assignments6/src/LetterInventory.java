@@ -53,13 +53,6 @@ public class LetterInventory {
                 numLetters++;
             }
         }
-        // for (int i = 0; i < phrase.length(); i++) {
-        // char currL = phrase.charAt(i);
-        // if (Character.isLetter(currL)) {
-        // letterFreq[Character.toLowerCase(currL) - 'a']++;
-        // total++;
-        // }
-        // }
     }
 
     /**
@@ -70,11 +63,9 @@ public class LetterInventory {
      * @return frequency of a given letter.
      */
     public int get(char letter) {
-        // is this bad?
-        // letter = Character.toLowerCase(letter);
         char lower = Character.toLowerCase(letter);
         // check preconditions
-        if ('a' > lower || lower > 'z') {// not sure if this argument is allowed (Character class)
+        if ('a' > lower || lower > 'z') {
             throw new IllegalArgumentException("Violation of precondition: "
                     + "get. letter parameter must be an English letter.");
         }
@@ -194,27 +185,5 @@ public class LetterInventory {
             }
         }
         return true;
-
-        // boolean same = numLetters == otherInven.numLetters;
-        // int i = 0;
-        // while (same && i < ALPHABET_SIZE) {
-        // same = letterFreq[i] == otherInven.letterFreq[i];
-        // i++;
-        // }
-        // return same;
-
-        // if (other instanceof LetterInventory) {
-        // LetterInventory otherInven = (LetterInventory) other;
-        // if (numLetters != otherInven.numLetters) {
-        // return false;
-        // }
-        // for (int i = 0; i < ALPHABET_SIZE; i++) {
-        // if (letterFreq[i] != otherInven.letterFreq[i]) {
-        // return false;
-        // }
-        // }
-        // return true;
-        // }
-        // return false;
     }
 }
